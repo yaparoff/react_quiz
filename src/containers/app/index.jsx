@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Container } from '../../components/container/Container';
-import './App.css';
+
+import { Question } from '../Question';
+import './style.css';
 
 
 export class App extends Component {
@@ -8,7 +9,7 @@ export class App extends Component {
     return (
       <div className="wrapper">
         <h1 className="title">Quiz</h1>
-        <Container/>
+        <Question/>
       </div>
     )
   }
