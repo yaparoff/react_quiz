@@ -9,7 +9,7 @@ export class Answer extends Component {
     const { onAnswerSelect } = this.props;
 
     return (
-      <label className="radio" onClick={this.showButtonNext}>
+      <label className="radio">
         {this.props.label}
         <input 
           onChange={onAnswerSelect}

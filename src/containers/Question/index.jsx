@@ -13,6 +13,7 @@ export class Question extends Component {
       {
         id: 1,
         title: 'Вопрос 1',
+        isPrevButtonVisible: false,
         answers: [
           {
             id: 'option1',
@@ -31,6 +32,7 @@ export class Question extends Component {
       {
         id: 2,
         title: 'Вопрос 2',
+        isPrevButtonVisible: true,
         answers: [
           {
             value: 'option1',
@@ -49,6 +51,7 @@ export class Question extends Component {
       {
         id: 3,
         title: 'Вопрос 3',
+        isPrevButtonVisible: true,
         answers: [
           {
             value: 'option1',
@@ -65,42 +68,57 @@ export class Question extends Component {
         ]
       },
     ]
-  }
+  };
 
   handleNextClick = () => {
     this.setState({
       activeQuestion: this.state.activeQuestion + 1,
       isNextButtonVisible: false
     })
-  }
+  };
+
+  handlePrevClick = () => {
+    this.setState({
+      activeQuestion: this.state.activeQuestion - 1
+    })
+  };
 
   handleAnswerSelect = () => {
     this.setState({
       isNextButtonVisible: true
     })
-  }
+  };
 
   render() {
 
     const { data, activeQuestion, isNextButtonVisible } = this.state;
 
     return (
-      <div className="container">
-        {data.map(quetion => activeQuestion === quetion.id &&
-          <div key={quetion.id}>
+      <div className="content">
+        {data.map( question => activeQuestion === question.id &&
+          <div key={ question.id }>
             <Title
-              text={quetion.title}
+              text={ question.title }
             />
-            {quetion.answers.map(answer =>
-              <Answer
-                key={answer.value}
-                label={answer.label}
-                onAnswerSelect={this.handleAnswerSelect}
-              />
-            )}
-            {isNextButtonVisible &&
-              <button className="btn" onClick={this.handleNextClick}>Далее</button>
-            }
+
+            <div className="content__list">
+              { question.answers.map(answer =>
+                <Answer
+                  key={answer.value}
+                  label={answer.label}
+                  onAnswerSelect={this.handleAnswerSelect}
+                />
+              )}
+            </div>
+
+            <div className="content__ctrls">
+              { question.isPrevButtonVisible &&
+                <button className="btn btn--back" onClick={this.handlePrevClick}>Назад</button>
+              }
+              {isNextButtonVisible &&
+                <button className="btn" onClick={this.handleNextClick}>Далее</button>
+              }
+            </div>
           </div>
         )}
       </div>
