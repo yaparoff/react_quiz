@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Question } from '../Question';
-import './style.css';
+import './app.scss';
 
 
 export class App extends Component {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Answer } from '../../components/Answer';
 import { Title } from '../../components/Title';
-import './style.css';
+import './question.scss';
 
 export class Question extends Component {
 
@@ -14,17 +14,18 @@ export class Question extends Component {
         id: 1,
         title: 'Вопрос 1',
         isPrevButtonVisible: false,
+        checkedAnswer: null,
         answers: [
           {
-            id: 'option1',
+            value: 'option1',
             label: 'ответ 1',
           },
           {
-            id: 'option2',
+            value: 'option2',
             label: 'ответ 2',
           },
           {
-            id: 'option3',
+            value: 'option3',
             label: 'ответ 3',
           }
         ]
@@ -33,6 +34,7 @@ export class Question extends Component {
         id: 2,
         title: 'Вопрос 2',
         isPrevButtonVisible: true,
+        checkedAnswer: null,
         answers: [
           {
             value: 'option1',
@@ -52,6 +54,7 @@ export class Question extends Component {
         id: 3,
         title: 'Вопрос 3',
         isPrevButtonVisible: true,
+        checkedAnswer: null,
         answers: [
           {
             value: 'option1',
@@ -73,8 +76,9 @@ export class Question extends Component {
   handleNextClick = () => {
     this.setState({
       activeQuestion: this.state.activeQuestion + 1,
-      isNextButtonVisible: false
+      isNextButtonVisible: false,
     })
+
   };
 
   handlePrevClick = () => {
@@ -83,10 +87,17 @@ export class Question extends Component {
     })
   };
 
-  handleAnswerSelect = () => {
+  handleAnswerSelect = (id) => {
+
     this.setState({
-      isNextButtonVisible: true
-    })
+      isNextButtonVisible: true,
+      data: this.state.data.map(item => {
+        if (this.state.activeQuestion === item.id) {
+          item.checkedAnswer = id;
+        }
+        return item;
+      })
+    });
   };
 
   render() {
@@ -102,21 +113,25 @@ export class Question extends Component {
             />
 
             <div className="content__list">
-              { question.answers.map(answer =>
+              { question.answers.map( answer =>
+
                 <Answer
-                  key={answer.value}
-                  label={answer.label}
-                  onAnswerSelect={this.handleAnswerSelect}
+                  key={ answer.value }
+                  label={ answer.label }
+                  onAnswerSelect={ () => this.handleAnswerSelect(answer.value) }
+                  checked={
+                    question.checkedAnswer == answer.value ? true : false
+                  }
                 />
               )}
             </div>
 
             <div className="content__ctrls">
               { question.isPrevButtonVisible &&
-                <button className="btn btn--back" onClick={this.handlePrevClick}>Назад</button>
+                <button className="btn btn--back" onClick={ this.handlePrevClick }>Назад</button>
               }
-              {isNextButtonVisible &&
-                <button className="btn" onClick={this.handleNextClick}>Далее</button>
+              {( isNextButtonVisible || question.checkedAnswer ) &&
+                <button className="btn" onClick={ this.handleNextClick }>Далее</button>
               }
             </div>
           </div>

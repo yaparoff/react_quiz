@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './style.css';
+import './answer.scss';
 
 export class Answer extends Component {
 
@@ -10,13 +10,13 @@ export class Answer extends Component {
 
     return (
       <label className="radio">
-        {this.props.label}
+        { this.props.label }
         <input 
-          onChange={onAnswerSelect}
+          onChange={ onAnswerSelect }
           type="radio"
           name='answer'
-          value={this.props.value}
-          checked={this.props.checked}
+          value={ this.props.value }
+          checked={ this.props.checked }
         />
         <span className="checkmark"></span>
       </label>
