@@ -5,80 +5,90 @@ import { Title } from '../../components/Title';
 import './question.scss';
 
 export class Question extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isNextButtonVisible: false,
+      activeQuestion: 1,
+      data: [
+        {
+          id: 1,
+          title: 'Вопрос 1',
+          isPrevButtonVisible: false,
+          checkedAnswer: null,
+          answers: [
+            {
+              value: 'option1',
+              label: 'ответ 1',
+            },
+            {
+              value: 'option2',
+              label: 'ответ 2',
+            },
+            {
+              value: 'option3',
+              label: 'ответ 3',
+            }
+          ]
+        },
+        {
+          id: 2,
+          title: 'Вопрос 2',
+          isPrevButtonVisible: true,
+          checkedAnswer: null,
+          answers: [
+            {
+              value: 'option1',
+              label: 'ответ 4',
+            },
+            {
+              value: 'option2',
+              label: 'ответ 5',
+            },
+            {
+              value: 'option3',
+              label: 'ответ 6',
+            }
+          ]
+        },
+        {
+          id: 3,
+          title: 'Вопрос 3',
+          isPrevButtonVisible: true,
+          checkedAnswer: null,
+          answers: [
+            {
+              value: 'option1',
+              label: 'ответ 7',
+            },
+            {
+              value: 'option2',
+              label: 'ответ 8',
+            },
+            {
+              value: 'option3',
+              label: 'ответ 9',
+            }
+          ]
+        },
+      ]
+    };
+  }
 
-  state = {
-    isNextButtonVisible: false,
-    activeQuestion: 1,
-    data: [
-      {
-        id: 1,
-        title: 'Вопрос 1',
-        isPrevButtonVisible: false,
-        checkedAnswer: null,
-        answers: [
-          {
-            value: 'option1',
-            label: 'ответ 1',
-          },
-          {
-            value: 'option2',
-            label: 'ответ 2',
-          },
-          {
-            value: 'option3',
-            label: 'ответ 3',
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: 'Вопрос 2',
-        isPrevButtonVisible: true,
-        checkedAnswer: null,
-        answers: [
-          {
-            value: 'option1',
-            label: 'ответ 4',
-          },
-          {
-            value: 'option2',
-            label: 'ответ 5',
-          },
-          {
-            value: 'option3',
-            label: 'ответ 6',
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: 'Вопрос 3',
-        isPrevButtonVisible: true,
-        checkedAnswer: null,
-        answers: [
-          {
-            value: 'option1',
-            label: 'ответ 7',
-          },
-          {
-            value: 'option2',
-            label: 'ответ 8',
-          },
-          {
-            value: 'option3',
-            label: 'ответ 9',
-          }
-        ]
-      },
-    ]
-  };
 
   handleNextClick = () => {
-    this.setState({
-      activeQuestion: this.state.activeQuestion + 1,
-      isNextButtonVisible: false,
-    })
+    if (this.state.activeQuestion === this.state.data.length) {
+      this.setState({
+        isNextButtonVisible: false
+      });
+      this.props.updateState();
 
+    } else {
+      this.setState({
+        activeQuestion: this.state.activeQuestion + 1,
+        isNextButtonVisible: false
+      });
+    }
   };
 
   handlePrevClick = () => {
@@ -101,17 +111,16 @@ export class Question extends Component {
   };
 
   render() {
-
     const { data, activeQuestion, isNextButtonVisible } = this.state;
+    const { isOver } = this.props;
 
     return (
       <div className="content">
-        {data.map( question => activeQuestion === question.id &&
-          <div key={ question.id }>
-            <Title
-              text={ question.title }
-            />
+        { !isOver &&
+          data.map( question => activeQuestion === question.id &&
 
+          <div key={ question.id }>
+            <Title text={ question.title } />
             <div className="content__list">
               { question.answers.map( answer =>
 
@@ -136,6 +145,10 @@ export class Question extends Component {
             </div>
           </div>
         )}
+
+        { isOver &&
+            <h1>Тест окончен</h1>
+        }
       </div>
     )
   }
