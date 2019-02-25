@@ -6,17 +6,22 @@ export class Answer extends Component {
 
   render() {
 
-    const { onAnswerSelect } = this.props;
+    const { 
+      onAnswerSelect,
+      value,
+      checked,
+      label
+    } = this.props;
 
     return (
       <label className="radio">
-        { this.props.label }
+        {label}
         <input 
           onChange={ onAnswerSelect }
           type="radio"
           name='answer'
-          value={ this.props.value }
-          checked={ this.props.checked }
+          value={value}
+          checked={checked}
         />
         <span className="checkmark"></span>
       </label>
