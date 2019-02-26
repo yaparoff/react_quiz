@@ -13,7 +13,7 @@ export class App extends Component {
     };
   }
 
-  updateState = () => {
+  finishTest = () => {
     this.setState({
       testIsOver: true
     });
@@ -26,11 +26,11 @@ export class App extends Component {
         <h1 className="title">Quiz</h1>
         <Question
           isOver={ this.state.testIsOver }
-          updateState={ this.updateState }
+          finishTest={ this.finishTest }
         />
         <Timer
           isOver={ this.state.testIsOver }
-          updateState={ this.updateState }
+          finishTest={ this.finishTest }
         />
       </div>
     )

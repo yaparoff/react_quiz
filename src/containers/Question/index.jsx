@@ -81,7 +81,7 @@ export class Question extends Component {
       this.setState({
         isNextButtonVisible: false
       });
-      this.props.updateState();
+      this.props.finishTest();
 
     } else {
       this.setState({

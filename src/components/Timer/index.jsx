@@ -6,8 +6,7 @@ export class Timer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      counter: 4 * 1,
-      increment: 1
+      counter: 4 * 1
     }
   }
 
@@ -45,18 +44,16 @@ export class Timer extends Component {
 
   render() {
     const { isOver } = this.props;
+    const { counter } = this.state;
 
     return (
       <div>
         { !isOver &&
           <div className="timer">
-            {this.transform(Math.floor(this.state.counter / 60))}
+            {this.transform(Math.floor(counter / 60))}
             :
-            {this.transform(this.state.counter % 60)}
+            {this.transform(counter % 60)}
           </div>
-        }
-        { isOver &&
-          <h1>Тест окончен</h1>
         }
       </div>
     )
