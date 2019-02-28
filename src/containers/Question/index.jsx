@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { createStore } from 'redux';
 
 import { Answer } from '../../components/Answer';
 import { Title } from '../../components/Title';
