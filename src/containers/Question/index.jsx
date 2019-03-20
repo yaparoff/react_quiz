@@ -1,136 +1,42 @@
 import React, { Component } from 'react';
-import { createStore } from 'redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions';
 
-import { Answer } from '../../components/Answer';
+import Answer from '../../components/Answer';
 import { Title } from '../../components/Title';
 import './question.scss';
 
-export class Question extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isNextButtonVisible: false,
-      activeQuestion: 1,
-      data: [
-        {
-          id: 1,
-          title: 'Вопрос 1',
-          isPrevButtonVisible: false,
-          checkedAnswer: null,
-          answers: [
-            {
-              value: 'option1',
-              label: 'ответ 1',
-            },
-            {
-              value: 'option2',
-              label: 'ответ 2',
-            },
-            {
-              value: 'option3',
-              label: 'ответ 3',
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Вопрос 2',
-          isPrevButtonVisible: true,
-          checkedAnswer: null,
-          answers: [
-            {
-              value: 'option1',
-              label: 'ответ 4',
-            },
-            {
-              value: 'option2',
-              label: 'ответ 5',
-            },
-            {
-              value: 'option3',
-              label: 'ответ 6',
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: 'Вопрос 3',
-          isPrevButtonVisible: true,
-          checkedAnswer: null,
-          answers: [
-            {
-              value: 'option1',
-              label: 'ответ 7',
-            },
-            {
-              value: 'option2',
-              label: 'ответ 8',
-            },
-            {
-              value: 'option3',
-              label: 'ответ 9',
-            }
-          ]
-        },
-      ]
-    };
-  }
+class Question extends Component {
 
-
-  handleNextClick = () => {
-    if (this.state.activeQuestion === this.state.data.length) {
-      this.setState({
-        isNextButtonVisible: false
-      });
-      this.props.finishTest();
-
-    } else {
-      this.setState({
-        activeQuestion: this.state.activeQuestion + 1,
-        isNextButtonVisible: false
-      });
-    }
-  };
-
-  handlePrevClick = () => {
-    this.setState({
-      activeQuestion: this.state.activeQuestion - 1
-    })
-  };
-
-  handleAnswerSelect = (id) => {
-
-    this.setState({
-      isNextButtonVisible: true,
-      data: this.state.data.map(item => {
-        if (this.state.activeQuestion === item.id) {
-          item.checkedAnswer = id;
-        }
-        return item;
-      })
-    });
+  changeHandler = (e) => {
+    const value = e.target.getAttribute('value');
+    this.props.nextBtnVisible(value)
   };
 
   render() {
-    const { data, activeQuestion, isNextButtonVisible } = this.state;
-    const { isOver } = this.props;
+    const { isOver, questions, goToNextQuestion, goToPrevQuestion } = this.props;
+
 
     return (
       <div className="content">
         { !isOver &&
-          data.map( question => activeQuestion === question.id &&
+
+          questions.data.map( question => questions.activeQuestion === question.id &&
 
           <div key={ question.id }>
             <Title text={ question.title } />
             <div className="content__list">
+
               { question.answers.map( answer =>
 
                 <Answer
                   key={ answer.value }
+                  value={ answer.value }
                   label={ answer.label }
-                  onAnswerSelect={ () => this.handleAnswerSelect(answer.value) }
+                  onChangeVisibleBtn={ this.changeHandler }
                   checked={
-                    question.checkedAnswer == answer.value ? true : false
+                    question.checkedAnswer === answer.value ? true : false
                   }
                 />
               )}
@@ -138,10 +44,13 @@ export class Question extends Component {
 
             <div className="content__ctrls">
               { question.isPrevButtonVisible &&
-                <button className="btn btn--back" onClick={ this.handlePrevClick }>Назад</button>
+                <button
+                  className="btn btn--back"
+                  onClick={ goToPrevQuestion }
+                >Назад</button>
               }
-              {( isNextButtonVisible || question.checkedAnswer ) &&
-                <button className="btn" onClick={ this.handleNextClick }>Далее</button>
+              {( questions.isNextButtonVisible || question.checkedAnswer ) &&
+                <button className="btn" onClick={ goToNextQuestion }>Далее</button>
               }
             </div>
           </div>
@@ -154,3 +63,22 @@ export class Question extends Component {
     )
   }
 }
+
+function mapStateToProps(state){
+  return {
+    questions: state
+  };
+}
+const mapDispatchToProps = (dispatch) => {
+
+  const { nextBtnVisible, goToNextQuestion, goToPrevQuestion } = bindActionCreators(actions, dispatch);
+
+  return {
+    nextBtnVisible,
+    goToNextQuestion,
+    goToPrevQuestion
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Question);
