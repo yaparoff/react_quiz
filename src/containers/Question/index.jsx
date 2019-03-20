@@ -9,46 +9,13 @@ import './question.scss';
 
 class Question extends Component {
 
-  handleNextClick = () => {
-    if (this.state.activeQuestion === this.state.data.length) {
-      this.setState({
-        isNextButtonVisible: false
-      });
-      this.props.finishTest();
-
-    } else {
-      this.setState({
-        activeQuestion: this.state.activeQuestion + 1,
-        isNextButtonVisible: false
-      });
-    }
-  };
-
-  handlePrevClick = () => {
-    this.setState({
-      activeQuestion: this.state.activeQuestion - 1
-    })
-  };
-
-  handleAnswerSelect = (id) => {
-
-    this.setState({
-      isNextButtonVisible: true,
-      data: this.state.data.map(item => {
-        if (this.state.activeQuestion === item.id) {
-          item.checkedAnswer = id;
-        }
-        return item;
-      })
-    });
-  };
-
   changeHandler = (e) => {
-    this.props.nextBtnVisible(e.target.getAttribute('value'))
+    const value = e.target.getAttribute('value');
+    this.props.nextBtnVisible(value)
   };
 
   render() {
-    const { isOver, questions, nextBtnVisible } = this.props;
+    const { isOver, questions, goToNextQuestion, goToPrevQuestion } = this.props;
 
 
     return (
@@ -68,20 +35,22 @@ class Question extends Component {
                   value={ answer.value }
                   label={ answer.label }
                   onChangeVisibleBtn={ this.changeHandler }
-                  // checked={ this.state.selectedOption === answer.value }
-                  // checked={
-                  //   // question.checkedAnswer == answer.value ? true : false
-                  // }
+                  checked={
+                    question.checkedAnswer === answer.value ? true : false
+                  }
                 />
               )}
             </div>
 
             <div className="content__ctrls">
               { question.isPrevButtonVisible &&
-                <button className="btn btn--back" /*onClick={ this.handlePrevClick }*/>Назад</button>
+                <button
+                  className="btn btn--back"
+                  onClick={ goToPrevQuestion }
+                >Назад</button>
               }
               {( questions.isNextButtonVisible || question.checkedAnswer ) &&
-                <button className="btn" onClick={ this.handleNextClick }>Далее</button>
+                <button className="btn" onClick={ goToNextQuestion }>Далее</button>
               }
             </div>
           </div>
@@ -102,10 +71,12 @@ function mapStateToProps(state){
 }
 const mapDispatchToProps = (dispatch) => {
 
-  const { nextBtnVisible } = bindActionCreators(actions, dispatch);
+  const { nextBtnVisible, goToNextQuestion, goToPrevQuestion } = bindActionCreators(actions, dispatch);
 
   return {
-    nextBtnVisible
+    nextBtnVisible,
+    goToNextQuestion,
+    goToPrevQuestion
   };
 }
 

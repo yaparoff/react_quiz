@@ -8,7 +8,8 @@ export default class Answer extends Component {
     const {
       onChangeVisibleBtn,
       value,
-      label
+      label,
+      checked
     } = this.props;
 
     return (
@@ -21,6 +22,7 @@ export default class Answer extends Component {
           type="radio"
           name='answer'
           value={ value }
+          checked={ checked }
         />
         <span className="checkmark"></span>
       </label>
