@@ -1,27 +1,26 @@
 import React, { Component } from 'react';
-
 import './answer.scss';
 
-export class Answer extends Component {
+export default class Answer extends Component {
 
   render() {
 
-    const { 
-      onAnswerSelect,
+    const {
+      onChangeVisibleBtn,
       value,
-      checked,
       label
     } = this.props;
 
     return (
+
       <label className="radio">
+
         {label}
         <input 
-          onChange={ onAnswerSelect }
+          onChange={ onChangeVisibleBtn }
           type="radio"
           name='answer'
-          value={value}
-          checked={checked}
+          value={ value }
         />
         <span className="checkmark"></span>
       </label>
