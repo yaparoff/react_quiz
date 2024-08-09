@@ -1,109 +1,84 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions';
 
-import { Answer } from '../../components/Answer';
+import Answer from '../../components/Answer';
 import { Title } from '../../components/Title';
-import './style.css';
+import './question.scss';
 
-export class Question extends Component {
+class Question extends Component {
 
-  state = {
-    isNextButtonVisible: false,
-    activeQuestion: 1,
-    data: [
-      {
-        id: 1,
-        title: 'Вопрос 1',
-        answers: [
-          {
-            id: 'option1',
-            label: 'ответ 1',
-          },
-          {
-            id: 'option2',
-            label: 'ответ 2',
-          },
-          {
-            id: 'option3',
-            label: 'ответ 3',
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: 'Вопрос 2',
-        answers: [
-          {
-            value: 'option1',
-            label: 'ответ 4',
-          },
-          {
-            value: 'option2',
-            label: 'ответ 5',
-          },
-          {
-            value: 'option3',
-            label: 'ответ 6',
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: 'Вопрос 3',
-        answers: [
-          {
-            value: 'option1',
-            label: 'ответ 7',
-          },
-          {
-            value: 'option2',
-            label: 'ответ 8',
-          },
-          {
-            value: 'option3',
-            label: 'ответ 9',
-          }
-        ]
-      },
-    ]
-  }
-
-  handleNextClick = () => {
-    this.setState({
-      activeQuestion: this.state.activeQuestion + 1,
-      isNextButtonVisible: false
-    })
-  }
-
-  handleAnswerSelect = () => {
-    this.setState({
-      isNextButtonVisible: true
-    })
-  }
+  changeHandler = (e) => {
+    const value = e.target.getAttribute('value');
+    this.props.nextBtnVisible(value)
+  };
 
   render() {
+    const { isOver, questions, goToNextQuestion, goToPrevQuestion } = this.props;
 
-    const { data, activeQuestion, isNextButtonVisible } = this.state;
 
     return (
-      <div className="container">
-        {data.map(quetion => activeQuestion === quetion.id &&
-          <div key={quetion.id}>
-            <Title
-              text={quetion.title}
-            />
-            {quetion.answers.map(answer =>
-              <Answer
-                key={answer.value}
-                label={answer.label}
-                onAnswerSelect={this.handleAnswerSelect}
-              />
-            )}
-            {isNextButtonVisible &&
-              <button className="btn" onClick={this.handleNextClick}>Далее</button>
-            }
+      <div className="content">
+        { !isOver &&
+
+          questions.data.map( question => questions.activeQuestion === question.id &&
+
+          <div key={ question.id }>
+            <Title text={ question.title } />
+            <div className="content__list">
+
+              { question.answers.map( answer =>
+
+                <Answer
+                  key={ answer.value }
+                  value={ answer.value }
+                  label={ answer.label }
+                  onChangeVisibleBtn={ this.changeHandler }
+                  checked={
+                    question.checkedAnswer === answer.value ? true : false
+                  }
+                />
+              )}
+            </div>
+
+            <div className="content__ctrls">
+              { question.isPrevButtonVisible &&
+                <button
+                  className="btn btn--back"
+                  onClick={ goToPrevQuestion }
+                >Назад</button>
+              }
+              {( questions.isNextButtonVisible || question.checkedAnswer ) &&
+                <button className="btn" onClick={ goToNextQuestion }>Далее</button>
+              }
+            </div>
           </div>
         )}
+
+        { isOver &&
+            <h1>Тест окончен</h1>
+        }
       </div>
     )
   }
 }
+
+function mapStateToProps(state){
+  return {
+    questions: state
+  };
+}
+const mapDispatchToProps = (dispatch) => {
+
+  const { nextBtnVisible, goToNextQuestion, goToPrevQuestion } = bindActionCreators(actions, dispatch);
+
+  return {
+    nextBtnVisible,
+    goToNextQuestion,
+    goToPrevQuestion
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Question);
